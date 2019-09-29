@@ -1,3 +1,3 @@
 # iris_dataset
 
-This is a multi-class clasification problem.
+This is a multi-class classification problem.
