@@ -4,40 +4,41 @@ from flask import Flask, jsonify, request
 from flask_restful import Api, Resource
 from sklearn.externals import joblib
 
-from model import train_model
+from model import iris_model
 
 app = Flask(__name__)
 api = Api(app)
 
-if not os.path.isfile('iris-model.model'):
-    train_model()
+if not os.path.isfile("iris_model.model"):
+    iris_model()
 
-model = joblib.load('iris-model.model')
+model = joblib.load("iris_model.model")
 
 
 class MakePrediction(Resource):
     @staticmethod
     def post():
         posted_data = request.get_json()
-        sepal_length = posted_data['sepal_length']
-        sepal_width = posted_data['sepal_width']
-        petal_length = posted_data['petal_length']
-        petal_width = posted_data['petal_width']
+        sepal_length = posted_data["sepal_length"]
+        sepal_width = posted_data["sepal_width"]
+        petal_length = posted_data["petal_length"]
+        petal_width = posted_data["petal_width"]
 
-        prediction = model.predict([[sepal_length, sepal_width, petal_length, petal_width]])[0]
+        prediction = model.predict([[sepal_length, sepal_width, petal_length, petal_width]])
+
         if prediction == 0:
-            predicted_class = 'Iris-setosa'
+            predicted_class = "Iris-setosa"
         elif prediction == 1:
-            predicted_class = 'Iris-versicolor'
+            predicted_class = "Iris-versicolor"
         else:
-            predicted_class = 'Iris-virginica'
+            predicted_class = "Iris-virginica"
 
         return jsonify({
-            'Prediction': predicted_class
+            "Prediction": predicted_class
         })
 
 
-api.add_resource(MakePrediction, '/predict')
+api.add_resource(MakePrediction, "/predict")
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(debug=True)
